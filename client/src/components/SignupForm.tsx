@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
 import { ADD_USER } from '../utils/mutations';
-import { useMutation } from '@apollo/client';
+// import { createUser } from '../utils/API';
 import Auth from '../utils/auth';
 import type { User } from '../models/User';
+import { useMutation } from '@apollo/client';
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
 const SignupForm = ({}: { handleModalClose: () => void }) => {
   // set initial form state
-  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
-  // set state for form validation
+  const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
   const [addUser] = useMutation(ADD_USER);
+  // set state for form validation
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -23,6 +24,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
   };
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
 
     // check if form has everything (as per react-bootstrap docs)
@@ -36,7 +38,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
       const { data } = await addUser({
         variables: { input: { ...userFormData } },
       });
-
+      console.log("data: ", data);
       Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
@@ -47,7 +49,7 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
       username: '',
       email: '',
       password: '',
-      savedBooks: [],
+      //savedBooks: [],
     });
   };
 
@@ -59,7 +61,6 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
         <Alert dismissible onClose={() => setShowAlert(false)} show={showAlert} variant='danger'>
           Something went wrong with your signup!
         </Alert>
-
         <Form.Group className='mb-3'>
           <Form.Label htmlFor='username'>Username</Form.Label>
           <Form.Control

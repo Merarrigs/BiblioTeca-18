@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
@@ -80,7 +80,7 @@ const SearchBooks = () => {
     try {
       
       await saveBook({
-        variables: {bookInfo:bookToSave},
+        variables: { bookData:bookToSave },
       });
 
       // if book successfully saves to user's account, save book id to state

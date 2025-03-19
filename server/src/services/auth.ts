@@ -9,26 +9,26 @@ export const authenticateToken = ({req}: any) => {
   let token = req.body.token || req.query.token || req.headers.authorization;
 
   if (req.headers.authorization) {
-    token = req.split(' ').pop().trim();
+    token = token.split(' ').pop().trim();
   }
 
   if (!token) {
-  return req;
+   return req;
   }
 
 // Try to verify the token
   try {
-  const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' });
-  // If the token is valid, attach the user data to the request object
-  req.user = data;
+    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2hr' });
+    // If the token is valid, attach the user data to the request object
+    req.user = data;
   } catch (err) {
-  // If the token is invalid, log an error message
-  console.log('Invalid token');
+    // If the token is invalid, log an error message
+    console.log('Invalid token');
   }
 
 // Return the request object
   return req;
-  };
+};
 
 
 export const signToken = (username: string, email: string, _id: unknown) => {
